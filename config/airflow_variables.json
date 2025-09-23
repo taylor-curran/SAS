@@ -1,0 +1,14 @@
+{
+  "clinical_dataset": "ADLBC",
+  "clinical_data_path": "/home/ubuntu/repos/SAS/data/adam/",
+  "clinical_output_path": "/tmp/clinical_analysis/",
+  "measurement_variable": "ALB",
+  "visit_condition": "and AVISITN in (0 2 4 6)",
+  "population_flag": "SAFFL",
+  "analysis_flag": "ANL01FL",
+  "treatment_variable": "trtp_short",
+  "treatment_num_variable": "trtpn",
+  "reference_lines": "UNIFORM",
+  "max_boxes_per_page": "20",
+  "output_format": "html"
+}

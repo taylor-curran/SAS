@@ -1,0 +1,67 @@
+
+dataset:
+  name: "ADLBC"
+  source_path: "/home/ubuntu/repos/SAS/data/adam/"
+  output_path: "/tmp/clinical_analysis/"
+
+analysis:
+  measurement_variable: "ALB"
+  
+  time_variable: "AVISITN"
+  
+  visit_condition: "and AVISITN in (0 2 4 6)"
+  
+  treatment_variable: "trtp_short"
+  treatment_num_variable: "trtpn"
+  measurement_var: "aval"
+  
+  low_limit_variable: "a1lo"
+  high_limit_variable: "a1hi"
+  
+  population_flag: "saffl"
+  analysis_flag: "anl01fl"
+
+reference_lines:
+  type: "UNIFORM"  # Options: NONE, UNIFORM, NARROW, ALL, or numeric values
+  custom_values: []  # Space-delimited list for custom reference lines
+
+visualization:
+  max_boxes_per_page: 20
+  
+  output_format: "html"  # Options: html, pdf, png
+  
+  plot_width: 1200
+  plot_height: 600
+  
+  color_palette: "Set1"
+  
+  highlight_outliers: true
+  outlier_color: "red"
+  outlier_size: 8
+
+treatment_mapping:
+  0: "P"
+  54: "X-high"
+  81: "X-low"
+  default: "UNEXPECTED"
+
+statistics:
+  mean_decimals: 2
+  std_decimals: 3
+  median_decimals: 1
+  quartile_decimals: 1
+
+outliers:
+  iqr_multiplier: 1.5
+  
+  detect_iqr_outliers: true
+  detect_normal_range_outliers: true
+
+spark:
+  app_name: "ClinicalDataAnalysis"
+  adaptive_enabled: true
+  coalesce_partitions: true
+  
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

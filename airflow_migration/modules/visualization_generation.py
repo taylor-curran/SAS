@@ -59,7 +59,7 @@ def generate_box_plots(config, **context):
         os.makedirs(output_dir, exist_ok=True)
         
         parameters = raw_pandas['PARAMCD'].unique()
-        timepoints = raw_pandas['ATPTN'].unique()
+        timepoints = sorted(raw_pandas['AVISITN'].unique())
         
         visualization_files = []
         
@@ -67,15 +67,15 @@ def generate_box_plots(config, **context):
             for timepoint in timepoints:
                 param_data = raw_pandas[
                     (raw_pandas['PARAMCD'] == param) & 
-                    (raw_pandas['ATPTN'] == timepoint)
+                    (raw_pandas['AVISITN'] == timepoint)
                 ]
                 
                 if len(param_data) == 0:
                     continue
                 
                 param_stats = stats_pandas[
-                    (raw_pandas['PARAMCD'] == param) & 
-                    (raw_pandas['ATPTN'] == timepoint)
+                    (stats_pandas['PARAMCD'] == param) & 
+                    (stats_pandas['AVISITN'] == timepoint)
                 ]
                 
                 fig = create_clinical_box_plot(

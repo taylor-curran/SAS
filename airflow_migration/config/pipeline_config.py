@@ -35,13 +35,13 @@ class PipelineConfig:
             'parameter_label': 'Albumin (g/L)',
             
             'treatment_var': 'trtp_short',  # %let t_var = trtp_short;
-            'treatment_num_var': 'trtpn',   # %let tn_var = trtpn;
-            'measurement_var': 'aval',      # %let m_var = aval;
-            'low_limit_var': 'a1lo',        # %let lo_var = a1lo;
-            'high_limit_var': 'a1hi',       # %let hi_var = a1hi;
+            'treatment_num_var': 'TRTPN',   # %let tn_var = trtpn;
+            'measurement_var': 'AVAL',      # %let m_var = aval;
+            'low_limit_var': 'A1LO',        # %let lo_var = a1lo;
+            'high_limit_var': 'A1HI',       # %let hi_var = a1hi;
             
-            'population_flag': 'saffl',     # %let p_fl = saffl;
-            'analysis_flag': 'anl01fl',     # %let a_fl = anl01fl;
+            'population_flag': 'SAFFL',     # %let p_fl = saffl;
+            'analysis_flag': 'ANL01FL',     # %let a_fl = anl01fl;
             
             'visit_filter': [0, 2, 4, 6],  # and AVISITN in (0 2 4 6)
             'parameter_filter': ['ALB'],    # paramcd in (&param)

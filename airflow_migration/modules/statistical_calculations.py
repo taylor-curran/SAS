@@ -51,6 +51,7 @@ def calculate_statistics(config, **context):
         logger.info(f"Loaded {df.count()} records for statistical analysis")
         
         stats_df = df.groupBy(
+            "PARAMCD",
             "AVISITN", 
             config['treatment_num_var'],
             "AVISIT", 

@@ -43,6 +43,12 @@ def ingest_adlbc_data(config, **context):
         pandas_df = pd.read_sas(dataset_path)
         logger.info(f"Loaded {len(pandas_df)} records from ADLBC dataset")
         
+        for column_name in pandas_df.columns:
+            if pandas_df[column_name].dtype == 'object':
+                pandas_df[column_name] = pandas_df[column_name].astype(str).replace('nan', None)
+            elif pandas_df[column_name].dtype in ['float64', 'int64']:
+                pandas_df[column_name] = pd.to_numeric(pandas_df[column_name], errors='coerce')
+        
         spark_df = spark.createDataFrame(pandas_df)
         
         processed_df = spark_df.withColumn("ATPTN", lit(1)) \

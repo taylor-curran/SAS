@@ -1,0 +1,52 @@
+
+analysis:
+  parameter: 'ALB'
+  
+  visits: [0, 2, 4, 6]
+  
+  reference_lines: 'UNIFORM'
+  
+  max_boxes_per_page: 20
+
+variables:
+  treatment_var: 'trtp_short'
+  
+  treatment_num_var: 'trtpn'
+  
+  measurement_var: 'aval'
+  
+  low_ref_var: 'a1lo'
+  
+  high_ref_var: 'a1hi'
+  
+  population_flag: 'saffl'
+  
+  analysis_flag: 'anl01fl'
+
+data:
+  dataset_name: 'ADLBC'
+  
+  input_path: '/data/adam/'
+  
+  output_path: '/results/clinical_analysis/'
+
+spark:
+  app_name: 'Clinical_Data_Analysis'
+  executor_memory: '4g'
+  driver_memory: '2g'
+  max_result_size: '1g'
+
+visualization:
+  output_format: 'html'
+  
+  dpi: 300
+  
+  width: 1200
+  height: 800
+  
+  color_palette: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+
+treatment_mapping:
+  0: 'P'
+  54: 'X-high'
+  81: 'X-low'

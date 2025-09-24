@@ -12,124 +12,36 @@ The original SAS-based system processed clinical trial data (SDTM format), conve
 
 ```mermaid
 flowchart TD
-    A[SDTM Raw Data<br/>Clinical Trial Data] --> B[ADaM Datasets<br/>Analysis-Ready Data]
-    B --> C[example_call_wpct-f.07.01.sas<br/>Environment Setup & Data Access]
-    C --> D[WPCT-F.07.01.sas<br/>Core Analysis Script]
-    
-    D --> E[Data Filtering<br/>WHERE clauses]
-    E --> F[Treatment Formatting<br/>PROC FORMAT]
-    F --> G[Statistical Calculations<br/>PROC SUMMARY]
-    G --> H[Outlier Detection<br/>Normal Range Logic]
-    H --> I[Box Plot Generation<br/>SGRENDER]
-    I --> J[PDF Output<br/>Local File System]
-    
-    subgraph "SAS Environment"
-        C
-        D
-        E
-        F
-        G
-        H
-        I
-    end
-    
-    subgraph "PhUSE Utility Macros"
-        K[util_access_test_data]
-        L[util_labels_from_var]
-        M[util_count_unique_values]
-        N[util_get_reference_lines]
-        O[util_value_format]
-    end
-    
-    D -.-> K
-    D -.-> L
-    D -.-> M
-    D -.-> N
-    D -.-> O
+    A[Clinical Trial Data<br/>SDTM/ADaM] --> B[SAS Environment<br/>Sequential Scripts]
+    B --> C[Data Processing<br/>Filtering & Formatting]
+    C --> D[Statistical Analysis<br/>Summary Statistics]
+    D --> E[Visualization<br/>Box Plots]
+    E --> F[PDF Reports<br/>Local Storage]
     
     style A fill:#ffcccc
-    style B fill:#ffcccc
-    style J fill:#ffcccc
+    style B fill:#e6ccff
+    style C fill:#ffffcc
+    style D fill:#ccffff
+    style E fill:#ccffcc
+    style F fill:#ffcccc
 ```
 
 ### New Airflow/PySpark Workflow
 
 ```mermaid
 flowchart TD
-    A[SDTM Raw Data<br/>Clinical Trial Data] --> B[ADaM Datasets<br/>SAS7BDAT Files]
-    B --> C[Airflow DAG<br/>clinical_data_analysis]
-    
-    C --> D[Task 1: Data Ingestion<br/>data_ingestion.py]
-    D --> E[Task 2: Data Preprocessing<br/>data_preprocessing.py]
-    E --> F[Task 3: Statistical Analysis<br/>statistical_analysis.py]
-    F --> G[Task 4: Visualization<br/>box_plots.py]
-    
-    D --> D1[Read SAS7BDAT Files<br/>pandas.read_sas]
-    D1 --> D2[Convert to Spark DataFrame<br/>spark.createDataFrame]
-    D2 --> D3[Add Timepoint Variables<br/>withColumn]
-    
-    E --> E1[Apply Data Filters<br/>DataFrame.filter]
-    E1 --> E2[Create Treatment Format<br/>when/otherwise]
-    E2 --> E3[Outlier Detection<br/>Normal Range Logic]
-    
-    F --> F1[Summary Statistics<br/>groupBy.agg]
-    F1 --> F2[Reference Lines<br/>Calculate Min/Max]
-    F2 --> F3[Format Values<br/>Statistical Formatting]
-    
-    G --> G1[Generate Box Plots<br/>Plotly]
-    G1 --> G2[Add Statistical Annotations<br/>Mean, SD, N]
-    G2 --> G3[Highlight Outliers<br/>Red Dots]
-    
-    D3 --> H[Parquet Files<br/>Cloud Storage]
-    E3 --> I[Parquet Files<br/>Cloud Storage]
-    F3 --> J[Parquet Files<br/>Cloud Storage]
-    G3 --> K[Interactive HTML Plots<br/>Cloud Storage]
-    
-    subgraph "Databricks/Spark Cluster"
-        D
-        E
-        F
-        D1
-        D2
-        D3
-        E1
-        E2
-        E3
-        F1
-        F2
-        F3
-    end
-    
-    subgraph "Python Visualization"
-        G
-        G1
-        G2
-        G3
-    end
-    
-    subgraph "Configuration Management"
-        L[pipeline_config.yaml<br/>Analysis Parameters]
-        M[airflow_variables.json<br/>Runtime Variables]
-    end
-    
-    subgraph "Utility Functions"
-        N[phuse_utilities.py<br/>Statistical Functions]
-        O[data_conversion.py<br/>SAS to Spark Conversion]
-    end
-    
-    C -.-> L
-    C -.-> M
-    D -.-> N
-    D -.-> O
-    E -.-> N
-    F -.-> N
+    A[Clinical Trial Data<br/>SDTM/ADaM] --> B[Airflow Orchestration<br/>Workflow Management]
+    B --> C[PySpark Processing<br/>Distributed Computing]
+    C --> D[Statistical Analysis<br/>Summary Statistics]
+    D --> E[Interactive Visualization<br/>Plotly Charts]
+    E --> F[Cloud Storage<br/>HTML Reports]
     
     style A fill:#ccffcc
-    style B fill:#ccffcc
-    style K fill:#ccffcc
-    style H fill:#e6f3ff
-    style I fill:#e6f3ff
-    style J fill:#e6f3ff
+    style B fill:#e6ccff
+    style C fill:#ffffcc
+    style D fill:#ccffff
+    style E fill:#ccffcc
+    style F fill:#ccffcc
 ```
 
 ## Key Migration Components

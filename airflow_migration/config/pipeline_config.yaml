@@ -1,0 +1,33 @@
+
+data_sources:
+  dataset: "ADLBC"  # Dataset name (equivalent to %let ds = ADLBC;)
+  parameters: ["ALB"]  # Parameters to analyze (equivalent to %let param = 'ALB';)
+  visits: [0, 2, 4, 6]  # Visits to include (equivalent to %let cond = %str(and AVISITN in (0 2 4 6));)
+
+variables:
+  treatment_var: "trtp_short"  # Treatment variable (equivalent to %let t_var = trtp_short;)
+  treatment_num_var: "trtpn"  # Treatment number variable (equivalent to %let tn_var = trtpn;)
+  measurement_var: "aval"  # Measurement variable (equivalent to %let m_var = aval;)
+  low_limit_var: "a1lo"  # Lower limit variable (equivalent to %let lo_var = a1lo;)
+  high_limit_var: "a1hi"  # Upper limit variable (equivalent to %let hi_var = a1hi;)
+  population_flag: "saffl"  # Population flag (equivalent to %let p_fl = saffl;)
+  analysis_flag: "anl01fl"  # Analysis flag (equivalent to %let a_fl = anl01fl;)
+
+plotting:
+  ref_lines: "UNIFORM"  # Reference lines type (equivalent to %let ref_lines = UNIFORM;)
+  max_boxes_per_page: 20  # Maximum boxes per page (equivalent to %let max_boxes_per_page = 20;)
+
+paths:
+  data_path: "/data"  # Base path to data directory
+  output_path: "/output"  # Base path for output
+  ingestion_output_path: "/tmp/clinical_data"  # Path for ingestion output
+  preprocessing_output_path: "/tmp/clinical_data_preprocessed"  # Path for preprocessing output
+  analysis_output_path: "/tmp/clinical_data_analysis"  # Path for analysis output
+  visualization_output_path: "/tmp/clinical_data_visualization"  # Path for visualization output
+  temp_dir: "/tmp"  # Directory for temporary files
+
+airflow:
+  email_on_failure: true
+  email_to: "clinical.data.team@example.com"
+  retries: 1
+  retry_delay_minutes: 5

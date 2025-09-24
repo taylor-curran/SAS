@@ -11,37 +11,37 @@ The original SAS-based system processed clinical trial data (SDTM format), conve
 ### Original SAS Workflow
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Clinical Trial Data<br/>SDTM/ADaM] --> B[SAS Environment<br/>Sequential Scripts]
     B --> C[Data Processing<br/>Filtering & Formatting]
     C --> D[Statistical Analysis<br/>Summary Statistics]
     D --> E[Visualization<br/>Box Plots]
     E --> F[PDF Reports<br/>Local Storage]
     
-    style A fill:#ffcccc
-    style B fill:#e6ccff
-    style C fill:#ffffcc
-    style D fill:#ccffff
-    style E fill:#ccffcc
-    style F fill:#ffcccc
+    style A fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff
+    style B fill:#4ecdc4,stroke:#333,stroke-width:2px,color:#fff
+    style C fill:#45b7d1,stroke:#333,stroke-width:2px,color:#fff
+    style D fill:#96ceb4,stroke:#333,stroke-width:2px,color:#fff
+    style E fill:#feca57,stroke:#333,stroke-width:2px,color:#333
+    style F fill:#ff9ff3,stroke:#333,stroke-width:2px,color:#fff
 ```
 
 ### New Airflow/PySpark Workflow
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Clinical Trial Data<br/>SDTM/ADaM] --> B[Airflow Orchestration<br/>Workflow Management]
     B --> C[PySpark Processing<br/>Distributed Computing]
     C --> D[Statistical Analysis<br/>Summary Statistics]
     D --> E[Interactive Visualization<br/>Plotly Charts]
     E --> F[Cloud Storage<br/>HTML Reports]
     
-    style A fill:#ccffcc
-    style B fill:#e6ccff
-    style C fill:#ffffcc
-    style D fill:#ccffff
-    style E fill:#ccffcc
-    style F fill:#ccffcc
+    style A fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff
+    style B fill:#6c5ce7,stroke:#333,stroke-width:2px,color:#fff
+    style C fill:#a29bfe,stroke:#333,stroke-width:2px,color:#fff
+    style D fill:#fd79a8,stroke:#333,stroke-width:2px,color:#fff
+    style E fill:#00b894,stroke:#333,stroke-width:2px,color:#fff
+    style F fill:#00cec9,stroke:#333,stroke-width:2px,color:#fff
 ```
 
 ## Key Migration Components

@@ -1,9 +1,18 @@
 """
-Clinical Data Analysis Pipeline DAG
+Clinical Data Analysis Pipeline DAG with OpenLineage and OpenMetadata Integration
 
-This Airflow DAG orchestrates the clinical data analysis pipeline, replacing the
-sequential SAS script execution with a 4-task workflow: data ingestion, preprocessing,
-statistical calculations, and visualization.
+This Airflow DAG orchestrates the clinical data analysis pipeline with comprehensive
+data lineage tracking and metadata management for pharmaceutical compliance.
+
+The pipeline consists of four main tasks:
+1. Data Ingestion: Load and process SDTM/ADaM datasets
+2. Data Preprocessing: Clean and prepare data for analysis
+3. Statistical Calculations: Perform statistical analysis
+4. Visualization: Generate plots and reports
+
+Configuration is managed through YAML files, replacing SAS macro variables.
+OpenLineage captures data lineage automatically, while OpenMetadata serves
+as the central metadata catalog for regulatory compliance.
 """
 
 import os
@@ -15,46 +24,93 @@ from airflow.operators.bash import BashOperator
 from airflow.models import Variable
 from airflow.utils.dates import days_ago
 
+try:
+    from airflow_provider_openmetadata.lineage.callback import success_callback, failure_callback
+except ImportError:
+    success_callback = None
+    failure_callback = None
+
 default_args = {
-    'owner': 'airflow',
+    'owner': 'clinical_data_team',
     'depends_on_past': False,
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
+    'on_failure_callback': failure_callback,
+    'on_success_callback': success_callback,
 }
 
 dag = DAG(
     'clinical_data_analysis_pipeline',
     default_args=default_args,
-    description='Clinical Data Analysis Pipeline',
+    description='Clinical Data Analysis Pipeline with OpenLineage and OpenMetadata',
     schedule_interval=timedelta(days=1),
     start_date=days_ago(1),
-    tags=['clinical', 'analysis', 'pyspark'],
+    tags=['clinical', 'analysis', 'pyspark', 'openlineage', 'pharmaceutical'],
 )
 
 
 data_ingestion_task = BashOperator(
     task_id='data_ingestion',
     bash_command='python {{ var.value.scripts_dir }}/data_ingestion.py --config {{ var.value.config_path }}',
+    outlets={
+        "tables": [
+            "clinical_data.adam.adlbc",
+            "clinical_data.sdtm.lb"
+        ]
+    },
     dag=dag,
 )
 
 data_preprocessing_task = BashOperator(
     task_id='data_preprocessing',
     bash_command='python {{ var.value.scripts_dir }}/data_preprocessing.py --config {{ var.value.config_path }}',
+    inlets={
+        "tables": [
+            "clinical_data.adam.adlbc"
+        ]
+    },
+    outlets={
+        "tables": [
+            "clinical_data.processed.lab_data_filtered",
+            "clinical_data.processed.outliers_detected"
+        ]
+    },
     dag=dag,
 )
 
 statistical_analysis_task = BashOperator(
     task_id='statistical_analysis',
     bash_command='python {{ var.value.scripts_dir }}/statistical_analysis.py --config {{ var.value.config_path }}',
+    inlets={
+        "tables": [
+            "clinical_data.processed.lab_data_filtered"
+        ]
+    },
+    outlets={
+        "tables": [
+            "clinical_data.analysis.summary_statistics",
+            "clinical_data.analysis.outlier_analysis"
+        ]
+    },
     dag=dag,
 )
 
 visualization_task = BashOperator(
     task_id='visualization',
     bash_command='python {{ var.value.scripts_dir }}/visualization.py --config {{ var.value.config_path }}',
+    inlets={
+        "tables": [
+            "clinical_data.analysis.summary_statistics"
+        ]
+    },
+    outlets={
+        "tables": [
+            "clinical_data.reports.box_plots",
+            "clinical_data.reports.statistical_summaries"
+        ]
+    },
     dag=dag,
 )
 

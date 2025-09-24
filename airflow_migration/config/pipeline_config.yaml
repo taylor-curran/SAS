@@ -31,3 +31,31 @@ airflow:
   email_to: "clinical.data.team@example.com"
   retries: 1
   retry_delay_minutes: 5
+
+lineage:
+  openlineage:
+    transport:
+      type: "http"
+      url: "http://localhost:5000"
+      endpoint: "/api/v1/lineage"
+      timeout: 5000
+      auth:
+        type: "api_key"
+        api_key: "${OPENLINEAGE_API_KEY}"
+  
+  openmetadata:
+    api_endpoint: "http://localhost:8585/api"
+    auth_provider_type: "openmetadata"
+    jwt_token: "${OPENMETADATA_JWT_TOKEN}"
+    airflow_service_name: "clinical_data_pipeline"
+    only_keep_dag_lineage: true
+    max_status: 10
+    timeout: 30
+    retry: 3
+    retry_wait: 60
+
+metadata:
+  domain: "pharmaceutical"
+  compliance_standards: ["FDA", "EMA", "ICH"]
+  data_classification: "clinical_trial_data"
+  retention_policy: "7_years"

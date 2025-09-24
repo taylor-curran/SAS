@@ -1,0 +1,10 @@
+# Airflow and OpenLineage integration
+openlineage-airflow>=1.0.0
+openmetadata-ingestion>=1.2.0
+airflow-provider-openmetadata>=1.0.0
+
+# Existing dependencies
+pyspark>=3.4.0
+plotly>=5.0.0
+pyarrow>=10.0.0
+pyyaml>=6.0

@@ -1,0 +1,83 @@
+data_sources:
+  catalog: "main"
+  schema: "sdtm"
+  ae_table: "ae"
+  dm_table: "dm"
+  ex_table: "ex"
+  meddra_table: "mdhier_14_0"
+  meddra_version: "14_0"
+
+analysis:
+  study_lag: 30
+  continuity_correction: "0.5"
+  filter_pct_threshold: 2.0
+  exp_arm: 1
+  ctl_arm: 2
+
+output:
+  catalog: "main"
+  schema: "results"
+  table_prefix: "ae_analysis_"
+
+databricks:
+  cluster_config:
+    spark_version: "13.3.x-scala2.12"
+    node_type_id: "i3.xlarge"
+    num_workers: 2
+  libraries:
+    - pypi:
+        package: "scipy>=1.10.0"
+    - pypi:
+        package: "numpy>=1.24.0"
+    - pypi:
+        package: "pandas>=2.0.0"
+
+meddra:
+  hierarchy_levels:
+    - "SOC"
+    - "HLGT"
+    - "HLT"
+    - "PT"
+    - "LLT"
+  
+  required_columns:
+    - "SOC_NAME"
+    - "HLGT_NAME"
+    - "HLT_NAME"
+    - "PT_NAME"
+    - "PRIMARY_SOC_FG"
+
+validation:
+  ae_required_columns:
+    - "USUBJID"
+    - "AEBODSYS"
+    - "AEDECOD"
+    - "AESTDTC"
+  
+  dm_required_columns:
+    - "USUBJID"
+    - "ARM"
+  
+  ex_required_columns:
+    - "USUBJID"
+    - "EXSTDTC"
+
+oncology:
+  toxicity_grades:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+  
+  grade_combinations:
+    - name: "Grade 3/4"
+      grades: [3, 4]
+    - name: "Grade 3/4/5"
+      grades: [3, 4, 5]
+  
+  continuity_correction_options:
+    - "0"
+    - "0.5"
+    - "1"
+    - "arm"

@@ -28,7 +28,9 @@ def labels_from_var(df: DataFrame, code_col: str, label_col: str) -> Dict[str, s
     Returns:
         Dictionary mapping parameter codes to their labels
     """
-    param_df = df.select(code_col, label_col).distinct()
+    df.createOrReplaceTempView("labels_data")
+    spark = df.sparkSession
+    param_df = spark.sql(f"SELECT DISTINCT {code_col}, {label_col} FROM labels_data")
     
     param_dict = {row[code_col]: row[label_col] for row in param_df.collect()}
     
@@ -89,8 +91,10 @@ def get_reference_lines(
         return []
     
     if ref_lines_type in ["UNIFORM", "NARROW", "ALL"]:
-        low_values = [row[0] for row in df.select(low_var).distinct().filter(F.col(low_var).isNotNull()).collect()]
-        high_values = [row[0] for row in df.select(high_var).distinct().filter(F.col(high_var).isNotNull()).collect()]
+        df.createOrReplaceTempView("ref_lines_data")
+        spark = df.sparkSession
+        low_values = [row[0] for row in spark.sql(f"SELECT DISTINCT {low_var} FROM ref_lines_data WHERE {low_var} IS NOT NULL").collect()]
+        high_values = [row[0] for row in spark.sql(f"SELECT DISTINCT {high_var} FROM ref_lines_data WHERE {high_var} IS NOT NULL").collect()]
         
         if ref_lines_type == "UNIFORM":
             if len(low_values) == 1:
@@ -161,7 +165,9 @@ def value_format(df: DataFrame, var: str) -> Dict[str, str]:
     Returns:
         Dictionary with format strings for different statistics
     """
-    numeric_data = df.select(var).filter(F.col(var).isNotNull())
+    df.createOrReplaceTempView("value_format_data")
+    spark = df.sparkSession
+    numeric_data = spark.sql(f"SELECT {var} FROM value_format_data WHERE {var} IS NOT NULL")
     
     if numeric_data.count() == 0:
         return {
@@ -172,7 +178,7 @@ def value_format(df: DataFrame, var: str) -> Dict[str, str]:
             "q3": "%.1f"
         }
     
-    sample_values = [row[0] for row in numeric_data.limit(100).collect()]
+    sample_values = [row[0] for row in spark.sql(f"SELECT {var} FROM value_format_data WHERE {var} IS NOT NULL LIMIT 100").collect()]
     
     has_decimals = any(isinstance(val, float) and val != int(val) for val in sample_values)
     

@@ -96,7 +96,8 @@ def analyze_by_parameter_timepoint(
     for param in parameters:
         param_df = spark.read.parquet(os.path.join(input_path, f"param_{param.lower()}.parquet"))
         
-        timepoints_df = param_df.select("atptn", "atpt").distinct()
+        param_df.createOrReplaceTempView("param_data")
+        timepoints_df = spark.sql("SELECT DISTINCT atptn, atpt FROM param_data")
         timepoints = [(row["atptn"], row["atpt"]) for row in timepoints_df.collect()]
         
         for tp_num, tp_label in timepoints:
@@ -119,7 +120,7 @@ def analyze_by_parameter_timepoint(
             
             metadata = {
                 "parameter_code": param,
-                "parameter_label": param_df.select("param").distinct().first()[0],
+                "parameter_label": spark.sql("SELECT DISTINCT param FROM param_data LIMIT 1").first()[0],
                 "timepoint_num": tp_num,
                 "timepoint_label": tp_label
             }
